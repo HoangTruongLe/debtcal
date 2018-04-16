@@ -137,8 +137,15 @@ function form_init(){
   load_product_data(db)
 
   // var product_name = prod_data
-  var dvt = [{ id: 1, text: 'Kg' }, { id: 25, text: 'Bao 25Kg'},
-            {id: 50,text: 'Bao 50Kg'},{id: 1000,text: 'Tấn'}]
+  var dvt = [
+    { id: 1, text: 'Kg' },
+    { id: "1.0", text: 'Bao' },
+    { id: 20, text: 'Bao 20Kg' },
+    { id: 25, text: 'Bao 25Kg'},
+    { id: 30, text: 'Bao 30Kg' },
+    {id: 50,text: 'Bao 50Kg'},
+    {id: 1000,text: 'Tấn'}
+  ]
 
   var interest_rate = [
     {id: 0.026667, text: '0.8%'},
@@ -234,8 +241,8 @@ function import_debt_to_table(){
   var middle = ""
   if($("input[id='customRadioInline2']:checked").length == 1 ){
     middle = `<td class="text-right no_goc"></td>
-              <td class="text-right tra_giua_ky">`+ (fparse($('#no_goc').html())* -1).formatMoney('0', '.', ',') +`</td>
-              <td class="text-right tien_lai">`+ (fparse($('#tien_lai').html()) * -1).formatMoney('0', '.', ',') +`</td>`
+              <td class="text-right tra_giua_ky btn-warning">`+ (fparse($('#no_goc').html())* -1).formatMoney('0', '.', ',') +`</td>
+              <td class="text-right tien_lai btn-warning">`+ (fparse($('#tien_lai').html()) * -1).formatMoney('0', '.', ',') +`</td>`
     tong = (fparse($("#no_goc").html()) + fparse($("#tien_lai").html())) * -1
   }else{
     middle = `<td class="text-right no_goc">`+ $('#no_goc').html() +`</td>
