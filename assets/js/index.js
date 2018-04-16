@@ -246,7 +246,7 @@ function import_debt_to_table(){
 
   var insert_text = `
   <tr>
-    <td class="text-center"><button type="button" onclick="$(this).closest('tr').remove()" class="close" style="float: none">&times;</button></td>
+    <td class="text-center noprint"><button type="button" onclick="$(this).closest('tr').remove()" class="close" style="float: none">&times;</button></td>
     <td class="text-center">`+ $('#start_date').val()+`</td>
     <td class="text-center">`+ $('#end_date').val()+`</td>
     <td class="text-center">`+ $('#diffDays').html()+`</td>
