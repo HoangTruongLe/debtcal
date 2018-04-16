@@ -7,7 +7,6 @@ $(document).ready(function(){
   var quantity = new AutoNumeric('#quantity', { currencySymbol : '', decimalPlaces: '0' });
   var debt_rate = new AutoNumeric('#debt_rate', { currencySymbol : '', decimalPlaces: '5' });
   var gia_danh_muc = new AutoNumeric('#gia_danh_muc', { currencySymbol : '', decimalPlaces: '0' });
-  debt_rate.set(0.03334)
   $('.datepicker').on("change", function(){
     if ($("#start_date").val() && $("#end_date").val()){
       $('#diffDays').html(cal_diff_days($("#start_date").val(), $("#end_date").val()))
@@ -39,20 +38,30 @@ $(document).ready(function(){
   $("#detb_table_body").bind('DOMSubtreeModified', function(){
     var tong_goc = 0
     var tong_lai = 0
+    var tong_tra = 0
     var tong_thanh_toan = 0
     $('#detb_table_body > tr').each(function(){
       tong_goc += fparse($(this).find('.no_goc').html())
       tong_lai += fparse($(this).find('.tien_lai').html())
-      tong_thanh_toan = tong_goc + tong_lai
+      tong_tra += fparse($(this).find('.tra_giua_ky').html())
+      tong_thanh_toan = tong_goc + tong_tra + tong_lai
+      console.log('tong goc' + tong_goc)
+      console.log('tong lai' + tong_lai)
       $('#td_tong_goc').html(tong_goc.formatMoney(0, '.', ','))
       $('#td_tong_lai').html(tong_lai.formatMoney(0, '.', ','))
+      $('#td_tong_tra').html(tong_tra.formatMoney(0, '.', ','))
       $('#td_tong_thanhtoan').html(tong_thanh_toan.formatMoney(0, '.', ','))
     })
   })
 })
 
 function fparse(val){
-  return parseFloat(remove_all_currency_mark(val))
+  var return_value = parseFloat(remove_all_currency_mark(val))
+  if(return_value){
+    return return_value
+  }else{
+    return 0
+  }
 }
 
 function cal_total_val(){
@@ -131,6 +140,13 @@ function form_init(){
   var dvt = [{ id: 1, text: 'Kg' }, { id: 25, text: 'Bao 25Kg'},
             {id: 50,text: 'Bao 50Kg'},{id: 1000,text: 'Tấn'}]
 
+  var interest_rate = [
+    {id: 0.026667, text: '0.8%'},
+    {id: 0.033333, text: '1.0%'},
+    {id: 0.04, text: '1.2%'},
+    {id: 0.05, text: '1.5%'},
+  ]
+
   $('#start_date').datepicker({autoclose: true});
   $('#end_date').datepicker({
       autoclose: true
@@ -142,8 +158,12 @@ function form_init(){
     allowClear: true,
     placeholder: "Chọn DVT"
   })
-  $("#dvt").val(1);
-  $("#dvt").change();
+
+  $('#debt_rate').select2({
+    data: interest_rate,
+    allowClear: true,
+    placeholder: "Chọn lãi xuất"
+  })
 }
 
 function initialize_database(){
@@ -205,10 +225,25 @@ function import_debt_to_table(){
   var quantity = fparse($("#quantity").val())
   var total_quantity =  dvt * quantity
   var formated_total_quantity = total_quantity.formatMoney('0', '.', ',')
+  var tong = 0
   console.log(total_quantity)
   if(!total_quantity){
     formated_total_quantity = ''
   }
+
+  var middle = ""
+  if($("input[id='customRadioInline2']:checked").length == 1 ){
+    middle = `<td class="text-right no_goc"></td>
+              <td class="text-right tra_giua_ky">`+ (fparse($('#no_goc').html())* -1).formatMoney('0', '.', ',') +`</td>
+              <td class="text-right tien_lai">`+ (fparse($('#tien_lai').html()) * -1).formatMoney('0', '.', ',') +`</td>`
+    tong = (fparse($("#no_goc").html()) + fparse($("#tien_lai").html())) * -1
+  }else{
+    middle = `<td class="text-right no_goc">`+ $('#no_goc').html() +`</td>
+              <td class="text-right tra_giua_ky"></td>
+              <td class="text-right tien_lai">`+ $('#tien_lai').html() +`</td>`
+    tong = fparse($("#no_goc").html()) + fparse($("#tien_lai").html())
+  }
+
   var insert_text = `
   <tr>
     <td class="text-center"><button type="button" onclick="$(this).closest('tr').remove()" class="close" style="float: none">&times;</button></td>
@@ -218,8 +253,8 @@ function import_debt_to_table(){
     <td class="text-left">`+ $('#product_name_mount').val()+`</td>
     <td class="text-center">`+ formated_total_quantity +`</td>
     <td class="text-right">`+ $('#price').val() +`</td>
-    <td class="text-right no_goc">`+ $('#no_goc').html() +`</td>
-    <td class="text-right tien_lai">`+ $('#tien_lai').html() +`</td>
+    `+ middle +`
+    <td class="text-right tong">`+ tong.formatMoney('0', '.', ',') +`</td>
     <td class="text-center">`+ $('#invoice_note').val() +`</td>
   </tr>`
   $('#detb_table_body').append(insert_text);
