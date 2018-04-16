@@ -4640,6 +4640,7 @@ Editableform based on Twitter Bootstrap 3
         initTemplate: function() {
             this.$form = $($.fn.editableform.template);
             this.$form.find('.control-group').addClass('form-group');
+            this.$form.find('.control-group div').addClass('input-group ml-1');
             this.$form.find('.editable-error-block').addClass('help-block');
         },
         initInput: function() {
@@ -4679,7 +4680,7 @@ Editableform based on Twitter Bootstrap 3
     //buttons
     $.fn.editableform.buttons =
       '<button type="submit" class="btn btn-primary btn-sm editable-submit mt-1">✓</button>'+
-      '<button type="button" class="btn btn-secondary btn-sm editable-cancel mt-1">✕</button>';
+      '<button type="button" class="btn btn-secondary btn-sm editable-cancel mt-1 ml-1">✕</button>';
 
     //error classes
     $.fn.editableform.errorGroupClass = 'has-error';
