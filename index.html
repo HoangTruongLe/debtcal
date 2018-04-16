@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="assets/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery-ui.min.js"></script>
+    <!-- <script type="module" src="assets/js/FileSaver.js"></script> -->
+    <!-- <script type="text/javascript" src="assets/locales/bootstrap-datepicker.vi.min.js"></script> -->
+    <script type="text/javascript" src="assets/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="assets/i18n/bootstrap-datepicker.vi.min.js"></script>
+    <script type="text/javascript" src="assets/js/jqueryui-editable.min.js"></script>
+    <script type="text/javascript" src="assets/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="assets/js/autoNumeric.min.js"></script>
+    <script type="text/javascript" src="assets/js/dexie.min.js"></script>
+    <script type="text/javascript" src="assets/js/pouchdb-6.4.3.min.js"></script>
+    <script type="text/javascript" src="assets/js/sql.js"></script>
+    <script type="text/javascript" src="data.json"></script>
+    <!-- <script type="text/javascript" src="assets/i18n/vi.js"></script> -->
+    <!-- <script type="text/javascript" src="assets/js/bootstrap-editable.min.js"></script> -->
+    <script type="text/javascript" src="assets/js/index.js"></script>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="assets/css/bootstrap-editable.css"> -->
+    <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="assets/css/jqueryui-editable.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="assets/css/select2.min.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <style type="text/css" media="print">
+      @page { size: landscape; }
+      @media print {
+        .noprint {display:none;}
+      }
+    </style>
+    <title>Đại Lý Cúc Hùng</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row" style="margin-top:10px;">
+        <div class="col-lg-7 col-sm-6">
+          <div class="row">
+            <h1 class="col-lg-7 col-sm-12" >Báo cáo công nợ</h1>
+            <div class="col-lg-5 col-sm-6 noprint">
+              <ul class="nav nav-tabs tabs-bordered">
+                <li class="nav-item">
+                  <a href="#cal_tool" data-toggle='tab' class="nav-link active">Bảng tính</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#product_management" data-toggle='tab' class="nav-link">Danh mục</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-lg-3 col-sm-5 text-right" style="padding-top: 18px;">
+          <small id='current_date_time'></small>
+        </div>
+        <div class="col-lg-2 col-sm-1 text-right noprint">
+          <button type="button" class="btn btn-secondary" onClick="window.print();" name="button">In</button>
+          <button type="button" class="btn btn-info" onClick="location.reload();" name="button">↻</button>
+          <button type="button" class="btn btn-warning" onClick="import_data_from_json()" name="button">↱↲</button>
+        </div>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane active" id="cal_tool">
+          <hr class="noprint">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group row">
+                <label for="customer_name" class="col-lg-4 col-sm-6 col-form-label">Tên Khách Hàng</label>
+                <div class="col-lg-8 col-sm-6">
+                  <input type="text" name="customer_name" class="form-control" value="">
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group row">
+                <label for="phone_number" class="col-lg-3 col-md-4 col-form-label">Điện Thoại</label>
+                <div class="col-lg-9 col-md-8">
+                  <input type="text" name="phone_number" class="form-control" value="">
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group row">
+                <label for="address" class="col-3 col-form-label">Địa chỉ</label>
+                <div class="col-9">
+                  <input type="text" name="address" class="form-control" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="noprint">
+          <table class="table table-bordered noprint">
+            <thead>
+              <th class="text-center" style="width: 8%">Ngày nợ</th>
+              <th class="text-center" style="width: 8%">Ngày tính lãi</th>
+              <th class="text-center" style="width: 2%">S.ngày</th>
+              <th class="text-center" style="width: 20%">Danh mục</th>
+              <th class="text-center" style="width: 10%">Đơn giá</th>
+              <th class="text-center" style="width: 10%">SL</th>
+              <th class="text-center" style="width: 7%">DVT</th>
+              <th class="text-center" style="width: 6%">Lãi(%/ngày)</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="ngay_no text-center"><input onchange="cal_total_val()" id="start_date" class="col-12 datepicker text-center" style="" type="text" name="" value=""></td>
+                <td class="ngay_tinh text-center"><input onchange="cal_total_val()" id="end_date" class="col-12 datepicker text-center" style="" type="text" name="" value=""></td>
+                <td class="so_ngay text-center"><strong><span id="diffDays"> </span></strong></td>
+                <td class="ten_mat_hang text-center">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <input id="product_name" class="col-10 text-center input-group-text" type="text" name="" value="">
+                    </div>
+                    <input onchange="cal_total_val()" id="product_name_mount" class="text-left form-control" style="" type="text" name="" value="">
+                  </div>
+                </td>
+                <td class="don_gia text-right"><input onchange="cal_total_val()" id="price" class="col-12 text-center" style="" type="text" name="" value=""></td>
+                <td class="so_luong text-center"><input onchange="cal_total_val()" id="quantity" class="col-12 text-center" style="" type="text" name="" value=""></td>
+                <td class="don_vi_tinh text-center"><input onchange="cal_total_val()" id="dvt" class="col-12 text-center" style="" type="text" name="" value=""></td>
+                <td class="lai_xuat text-center"><input onchange="cal_total_val()" id="debt_rate" class="col-12 text-center" style="" type="text" name="" value=""></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row noprint">
+            <div class="col-4">
+              <div class="row"><span class="col-4">Nợ gốc:</span><strong class='col-5 text-right'> <span id="no_goc">  </span> </strong> </div>
+              <div class="row"><span class="col-4">Lãi:</span><strong class='col-5 text-right'> <span id="tien_lai">  </span> </strong> </div>
+              <div class="row"><span class="col-4">Tổng thanh toán:</span><strong class='col-5 text-right'><span id="tong_thanh_toan">  </span> </strong> </div>
+              <hr>
+              <div class="row">
+                <h6 class="col-3">Quy đổi:</h6>
+                <div class="col-8">
+                  <span style="color:red">1%</span> <span>/1 tháng</span> -> <span style="color:red">0.03333%</span> <span>/1 ngày</span>
+                  <br>
+                  <span style="color:red">1.5%</span> <span>/1 tháng</span> -> <span style="color:red">0.05%</span> <span>/1 ngày</span>
+                  <br>
+                  <span style="color:red">2.0%</span> <span>/1 tháng</span> -> <span style="color:red">0.06666%</span> <span>/1 ngày</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <h6 class="col-3">Ghi chú:</h6>
+                <textarea class="col-9" id="invoice_note" name="name" rows="3" cols="80"></textarea>
+              </div>
+            </div>
+            <div class="col-2 text-right">
+              <button type="button" class="btn btn-primary" onClick="import_debt_to_table()" name="button">Nhập công nợ</button>
+            </div>
+          </div>
+          <hr>
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+              <th class="text-center" style="width: 1%">Xoá</th>
+              <th class="text-center" style="width: 7%">Ngày ghi nợ</th>
+              <th class="text-center" style="width: 8%">Ngày tính lãi</th>
+              <th class="text-center" style="width: 5%">S.ngày</th>
+              <th class="text-center" style="width: 12%">Danh mục</th>
+              <th class="text-center" style="width: 4%">SL</th>
+              <th class="text-center" style="width: 8%">Đơn giá</th>
+              <th class="text-center" style="width: 10%">Tiền gốc</th>
+              <th class="text-center" style="width: 4%">Tiền lãi</th>
+              <th class="text-center" style="width: 15%">Ghi chú</th>
+            </thead>
+            <tbody id='detb_table_body'>
+            </tbody>
+            <tbody>
+              <tr class="success">
+                <td colspan="7"><strong>Tổng cộng</strong></td>
+                <td class="text-right" ><strong id='td_tong_goc'>0</strong></td>
+                <td class="text-right" ><strong id='td_tong_lai'>0</strong></td>
+                <td class="text-center" >= <strong id='td_tong_thanhtoan'>0</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane" id="product_management">
+          <div class="col-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="form-group row">
+                  <label for="customer_name" class="col-lg-4 col-sm-6 col-form-label">Mã danh mục</label>
+                  <div class="col-lg-8 col-sm-6">
+                    <input type="text" id="ma_danh_muc" name="customer_name" class="form-control" value="">
+                  </div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="form-group row">
+                  <label for="phone_number" class="col-lg-4 col-md-4 col-form-label">Tên danh mục</label>
+                  <div class="col-lg-8 col-md-8">
+                    <input type="text" id="ten_danh_muc" name="phone_number" class="form-control" value="">
+                  </div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group row">
+                  <label for="address" class="col-3 col-form-label">Giá</label>
+                  <div class="col-9">
+                    <input type="text" id="gia_danh_muc" name="address" class="form-control text-right" value="">
+                  </div>
+                </div>
+              </div>
+              <div class="col-1">
+                <button type="button" onClick="import_data_to_product_table()" class="btn btn-primary" name="button">Thêm
+
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <table class="table table-bordered table-striped table-hover">
+                <thead>
+                  <th class="text-center" style="width: 10%">Xoá</th>
+                  <th class="text-center" style="width: 10%">STT</th>
+                  <th class="text-center" style="width: 10%">Mã Danh Mục</th>
+                  <th class="text-center" style="width: 20%">Tên Danh Mục</th>
+                  <th class="text-center" style="width: 10%">Giá</th>
+                  <th class="text-center" style="width: 40%"></th>
+                </thead>
+                <tbody id="product_table">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+
+</html>

@@ -1,0 +1,4 @@
+data = [
+  { "id": "congno", "text": "Công nợ", "price": 0 },
+  { "id": "test", "text": "testdata", "price": 12132 },
+]
