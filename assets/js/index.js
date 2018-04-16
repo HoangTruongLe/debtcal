@@ -1,5 +1,6 @@
 $(document).ready(function(){
   $.fn.datepicker.defaults.language = 'vi';
+  $.fn.editable.defaults.mode = 'inline';
   form_init();
   $('#current_date_time').html(get_current_date_time())
   var price = new AutoNumeric('#price', { currencySymbol : '', decimalPlaces: '0' });
@@ -239,11 +240,45 @@ function render_product(product) {
     <td class="text-center"><button type="button" onclick="delete_product(this,'`+ product.id +`')" class="close" style="float: none">&times;</button></td>
     <td class="text-center">`+ product.prod_id +`</td>
     <td class="text-center">`+ product.id +`</td>
-    <td class="text-left">`+ product.text +`</td>
-    <td class="text-right" style="padding-right: 30px">`+ product.price.formatMoney('0', '.', ',') +`</td>
+    <td id="prodname_`+product.prod_id+`" class="text-left prod_name">`+ product.text +`</td>
+    <td id="prodprice_`+product.prod_id+`" class="text-right prod_price" style="padding-right: 30px">`+ product.price.formatMoney('0', '.', ',') +`</td>
     <td class="text-right"></td>
   </tr>`
   $('#product_table').append(insert_text);
+  $('#prodname_' + product.prod_id).editable({
+    type: 'text',
+    title: 'Nhập tên danh mục',
+    success: function(response, newValue) {
+      db = initialize_database()
+      db.products.where('prod_id').equals(product.prod_id).modify({text: newValue})
+      rerender_product()
+    }
+  });
+  $('#prodprice_' + product.prod_id).editable({
+    type: 'text',
+    title: 'Nhập giá',
+    success: function(response, newValue) {
+      var prod_price = fparse(newValue)
+      if (prod_price){
+        db = initialize_database()
+        db.products.where('prod_id').equals(product.prod_id).modify({price: prod_price})
+        rerender_product()
+      }else{
+        alert("Nhập không thành công, vui lòng thử lại!")
+        rerender_product()
+      }
+    }
+  });
+}
+
+function rerender_product(){
+  db = initialize_database()
+  $('#product_table').html('');
+  db.products.toArray().then(function(val){
+    val.forEach(function(product){
+      render_product(product)
+    })
+  })
 }
 
 function delete_product(del_btn, id){

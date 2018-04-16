@@ -1,4 +1,9 @@
 data = [
   { "id": "congno", "text": "Công nợ", "price": 0 },
   { "id": "test", "text": "testdata", "price": 12132 },
+  { "id": "test1", "text": "testdata", "price": 12132 },
+  { "id": "test2", "text": "testdata", "price": 12132 },
+  { "id": "test3", "text": "testdata", "price": 12132 },
+  { "id": "test4", "text": "testdata", "price": 12132 },
+  { "id": "test5", "text": "testdata", "price": 12132 },
 ]
