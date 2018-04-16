@@ -17,7 +17,6 @@
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap-datepicker3.min.css">
-    <!-- <link href="assets/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="assets/css/select2.min.css">
     <link rel="stylesheet" href="assets/css/custom.css">
 
@@ -31,22 +30,22 @@
   </head>
   <body>
     <div class="container-fluid">
-      <div class="row" style="margin-top:10px;">
+      <div class="row" style="margin-top:10px; margin-bottom: 20px">
+
         <div class="col-lg-7 col-sm-6">
           <div class="row">
-            <h1 class="col-lg-7 col-sm-12" >Báo cáo công nợ</h1>
+            <h3 class="col-lg-7 col-sm-12">Báo cáo công nợ</h3>
             <div class="col-lg-5 col-sm-6 noprint">
               <ul class="nav nav-tabs tabs-bordered">
                 <li class="nav-item">
-                  <a href="#cal_tool" data-toggle='tab' class="nav-link active">Bảng tính</a>
+                  <a href="#cal_tool" data-toggle='tab' class="nav-link active btn-info">Bảng tính</a>
                 </li>
                 <li class="nav-item">
-                  <a href="#product_management" data-toggle='tab' class="nav-link">Danh mục</a>
+                  <a href="#product_management" data-toggle='tab' class="nav-link btn-secondary">Danh mục</a>
                 </li>
               </ul>
             </div>
           </div>
-
         </div>
         <div class="col-lg-3 col-sm-5 text-right" style="padding-top: 18px;">
           <small id='current_date_time'></small>
@@ -59,7 +58,6 @@
       </div>
       <div class="tab-content">
         <div class="tab-pane active" id="cal_tool">
-          <hr class="noprint">
           <div class="row">
             <div class="col-4">
               <div class="form-group row">
@@ -86,7 +84,6 @@
               </div>
             </div>
           </div>
-          <hr class="noprint">
           <table class="table table-bordered noprint">
             <thead>
               <th class="text-center" style="width: 7%">Phương thức</th>
@@ -104,11 +101,11 @@
                 <td class="text-center">
                   <div class="custom-control custom-radio custom-control-inline" style="margin-left: -5px; margin-right: 0px;">
                     <input type="radio" id="customRadioInline1" checked name="customRadioInline1" class="custom-control-input">
-                    <label class="custom-control-label" for="customRadioInline1">Nợ</label>
+                    <label class="custom-control-label pt-1" for="customRadioInline1">Nợ</label>
                   </div>
                   <div class="custom-control custom-radio custom-control-inline" style="margin-left: 5px; margin-right: 0px;">
                     <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
-                    <label class="custom-control-label" for="customRadioInline2">Trả</label>
+                    <label class="custom-control-label pt-1" for="customRadioInline2">Trả</label>
                   </div>
                 </td>
                 <td class="ngay_no text-center"><input onchange="cal_total_val()" id="start_date" class="col-12 datepicker text-center" style="" type="text" name="" value=""></td>
@@ -129,7 +126,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="row noprint">
+          <div class="row noprint mb-2">
             <div class="col-4">
               <div class="row"><span class="col-4">Nợ gốc:</span><strong class='col-5 text-right'> <span id="no_goc">  </span> </strong> </div>
               <div class="row"><span class="col-4">Lãi:</span><strong class='col-5 text-right'> <span id="tien_lai">  </span> </strong> </div>
@@ -145,7 +142,6 @@
               <button type="button" class="btn btn-primary" onClick="import_debt_to_table()" name="button">Nhập công nợ</button>
             </div>
           </div>
-          <hr>
           <table class="table table-bordered table-striped table-hover">
             <thead>
               <th class="text-center noprint" style="width: 1%">Xoá</th>
